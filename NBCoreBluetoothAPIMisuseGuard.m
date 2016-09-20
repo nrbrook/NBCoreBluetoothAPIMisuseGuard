@@ -6,7 +6,7 @@
 //  Copyright © 2016 LifeStyleLock. All rights reserved.
 //
 
-@import CoreBluetooth;
+#import <CoreBluetooth/CoreBluetooth.h>
 #import <objc/runtime.h>
 #import <objc/message.h>
 
