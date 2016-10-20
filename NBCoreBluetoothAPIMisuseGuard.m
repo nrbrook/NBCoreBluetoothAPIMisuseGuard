@@ -71,7 +71,7 @@ static void surroundMethods(Class class, SEL *selectors, unsigned int numSelecto
             CBCentralManager * s = invocation.target;
             if(s.state != CBCentralManagerStatePoweredOn) {
                         NSString *stack = [[NSThread callStackSymbols] componentsJoinedByString:@"\n"];
-                        NSAssert(NO, @"CBCentralManager was not in powered on state when a method was called. State was %ld\n\nStacktrace:\n%@", (long)s.state, stack);
+                        NSAssert(NO, @"CBCentralManager was not in powered on state when %@ was called. State was %ld\n\nStacktrace:\n%@", NSStringFromSelector(invocation.selector), (long)s.state, stack);
             }
         }, nil);
     });
@@ -100,7 +100,7 @@ static void surroundMethods(Class class, SEL *selectors, unsigned int numSelecto
             CBPeripheral * s = invocation.target;
             if(s.state != CBPeripheralStateConnected) {
                 NSString *stack = [[NSThread callStackSymbols] componentsJoinedByString:@"\n"];
-                NSAssert(NO, @"CBPeripheral was not in connected state when a method was called. State was %ld\n\nStacktrace:\n%@", (long)s.state, stack);
+                NSAssert(NO, @"CBPeripheral was not in connected state when %@ was called. State was %ld\n\nStacktrace:\n%@", NSStringFromSelector(invocation.selector), (long)s.state, stack);
             }
         }, nil);
     });
@@ -127,7 +127,7 @@ static void surroundMethods(Class class, SEL *selectors, unsigned int numSelecto
             CBPeripheralManager * s = invocation.target;
             if(s.state != CBPeripheralManagerStatePoweredOn) {
                 NSString *stack = [[NSThread callStackSymbols] componentsJoinedByString:@"\n"];
-                NSAssert(NO, @"CBPeripheralManager was not in powered on state when a method was called. State was %ld\n\nStacktrace:\n%@", (long)s.state, stack);
+                NSAssert(NO, @"CBPeripheralManager was not in powered on state when %@ was called. State was %ld\n\nStacktrace:\n%@", NSStringFromSelector(invocation.selector), (long)s.state, stack);
             }
         }, nil);
     });
