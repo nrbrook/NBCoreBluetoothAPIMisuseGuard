@@ -37,9 +37,9 @@ static void swizzleForwarding(Class class, NSString * swizzledPrefix, void (^bef
 }
 
 static void removeAllFromList(Class class, NSString *toSwizzlePrefix, SEL selectors[], unsigned int numSelectors) {
+    SEL selectorWithNoImplementation = sel_registerName("methodWhichMustNotExist::::");
+    IMP forwarderIMP = class_getMethodImplementation(class, selectorWithNoImplementation);
     for (int i = 0; i < numSelectors; i++) {
-        SEL selectorWithNoImplementation = sel_registerName("methodWhichMustNotExist::::");
-        IMP forwarderIMP = class_getMethodImplementation(class, selectorWithNoImplementation);
         Method originalMethod = class_getInstanceMethod(class, selectors[i]);
         IMP originalIMP = method_getImplementation(originalMethod);
         const char *types = method_getTypeEncoding(originalMethod);
