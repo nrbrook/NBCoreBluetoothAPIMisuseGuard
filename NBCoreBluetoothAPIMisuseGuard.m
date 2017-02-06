@@ -1,9 +1,8 @@
 //
 //  NBCoreBluetoothAPIMisuseGuard.m
-//  LifeStyleLock
 //
 //  Created by Nick Brook on 03/05/2016.
-//  Copyright © 2016 LifeStyleLock. All rights reserved.
+//  Copyright © 2016 Nick Brook. All rights reserved.
 //
 
 #import <CoreBluetooth/CoreBluetooth.h>
