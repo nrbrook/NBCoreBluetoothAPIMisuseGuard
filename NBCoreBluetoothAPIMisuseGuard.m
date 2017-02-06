@@ -68,7 +68,7 @@ static void surroundMethods(Class class, SEL *selectors, unsigned int numSelecto
         };
         surroundMethods(self.class, selectors, sizeof(selectors) / sizeof(SEL), ^(NSInvocation *invocation) {
             CBCentralManager * s = invocation.target;
-            if(s.state != CBCentralManagerStatePoweredOn) {
+            if(s.state != CBManagerStatePoweredOn) {
                         NSString *stack = [[NSThread callStackSymbols] componentsJoinedByString:@"\n"];
                         NSAssert(NO, @"CBCentralManager was not in powered on state when %@ was called. State was %ld\n\nStacktrace:\n%@", NSStringFromSelector(invocation.selector), (long)s.state, stack);
             }
@@ -124,7 +124,7 @@ static void surroundMethods(Class class, SEL *selectors, unsigned int numSelecto
         };
         surroundMethods(self.class, selectors, sizeof(selectors) / sizeof(SEL), ^(NSInvocation *invocation) {
             CBPeripheralManager * s = invocation.target;
-            if(s.state != CBPeripheralManagerStatePoweredOn) {
+            if(s.state != CBManagerStatePoweredOn) {
                 NSString *stack = [[NSThread callStackSymbols] componentsJoinedByString:@"\n"];
                 NSAssert(NO, @"CBPeripheralManager was not in powered on state when %@ was called. State was %ld\n\nStacktrace:\n%@", NSStringFromSelector(invocation.selector), (long)s.state, stack);
             }
