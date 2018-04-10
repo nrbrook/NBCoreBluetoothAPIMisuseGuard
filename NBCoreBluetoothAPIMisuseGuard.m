@@ -11,6 +11,30 @@
 
 #if DEBUG
 
+static BOOL isCentralPoweredOn(CBCentralManager * c) {
+#if TARGET_OS_IPHONE
+    if (@available(iOS 10.0, *)) {
+        return c.state == CBManagerStatePoweredOn;
+    } else {
+        return c.state == CBCentralManagerStatePoweredOn;
+    }
+#else
+    return c.state == CBCentralManagerStatePoweredOn;
+#endif
+}
+
+static BOOL isPeripheralPoweredOn(CBPeripheralManager * c) {
+#if TARGET_OS_IPHONE
+    if (@available(iOS 10.0, *)) {
+        return c.state == CBManagerStatePoweredOn;
+    } else {
+        return c.state == CBPeripheralManagerStatePoweredOn;
+    }
+#else
+    return c.state == CBPeripheralManagerStatePoweredOn;
+#endif
+}
+
 static void swizzleForwarding(Class class, NSString * swizzledPrefix, void (^before)(NSInvocation * invocation), void (^after)(NSInvocation * invocation)) {
     SEL selector = @selector(forwardInvocation:);
     Method method = class_getInstanceMethod(class, selector);
@@ -68,13 +92,9 @@ static void surroundMethods(Class class, SEL *selectors, unsigned int numSelecto
         };
         surroundMethods(self.class, selectors, sizeof(selectors) / sizeof(SEL), ^(NSInvocation *invocation) {
             CBCentralManager * s = invocation.target;
-#if TARGET_OS_IPHONE
-            if(s.state != CBManagerStatePoweredOn) {
-#else
-            if(s.state != CBCentralManagerStatePoweredOn) {
-#endif
-                        NSString *stack = [[NSThread callStackSymbols] componentsJoinedByString:@"\n"];
-                        NSAssert(NO, @"CBCentralManager was not in powered on state when %@ was called. State was %ld\n\nStacktrace:\n%@", NSStringFromSelector(invocation.selector), (long)s.state, stack);
+            if(!isCentralPoweredOn(s)) {
+                NSString *stack = [[NSThread callStackSymbols] componentsJoinedByString:@"\n"];
+                NSAssert(NO, @"CBCentralManager was not in powered on state when %@ was called. State was %ld\n\nStacktrace:\n%@", NSStringFromSelector(invocation.selector), (long)s.state, stack);
             }
         }, nil);
     });
@@ -128,11 +148,7 @@ static void surroundMethods(Class class, SEL *selectors, unsigned int numSelecto
         };
         surroundMethods(self.class, selectors, sizeof(selectors) / sizeof(SEL), ^(NSInvocation *invocation) {
             CBPeripheralManager * s = invocation.target;
-#if TARGET_OS_IPHONE
-                if(s.state != CBManagerStatePoweredOn) {
-#else
-                if(s.state != CBCentralManagerStatePoweredOn) {
-#endif
+            if(!isPeripheralPoweredOn(s)) {
                 NSString *stack = [[NSThread callStackSymbols] componentsJoinedByString:@"\n"];
                 NSAssert(NO, @"CBPeripheralManager was not in powered on state when %@ was called. State was %ld\n\nStacktrace:\n%@", NSStringFromSelector(invocation.selector), (long)s.state, stack);
             }
