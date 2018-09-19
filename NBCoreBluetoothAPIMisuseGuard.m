@@ -13,11 +13,15 @@
 
 static BOOL isCentralPoweredOn(CBCentralManager * c) {
 #if TARGET_OS_IPHONE
-    if (@available(iOS 10.0, *)) {
-        return c.state == CBManagerStatePoweredOn;
-    } else {
-        return c.state == CBCentralManagerStatePoweredOn;
-    }
+	if(@available(iOS 10.0, *)) {
+		return c.state == CBManagerStatePoweredOn;
+	} else {
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_10_0
+		return c.state == CBCentralManagerStatePoweredOn;
+#else
+		return NO;
+#endif
+	}
 #else
     return c.state == CBCentralManagerStatePoweredOn;
 #endif
@@ -25,13 +29,17 @@ static BOOL isCentralPoweredOn(CBCentralManager * c) {
 
 static BOOL isPeripheralPoweredOn(CBPeripheralManager * c) {
 #if TARGET_OS_IPHONE
-    if (@available(iOS 10.0, *)) {
-        return c.state == CBManagerStatePoweredOn;
-    } else {
-        return c.state == CBPeripheralManagerStatePoweredOn;
-    }
+	if(@available(iOS 10.0, *)) {
+		return c.state == CBManagerStatePoweredOn;
+	} else {
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_10_0
+		return c.state == CBPeripheralManagerStatePoweredOn;
 #else
-    return c.state == CBPeripheralManagerStatePoweredOn;
+		return NO;
+#endif
+	}
+#else
+	return c.state == CBPeripheralManagerStatePoweredOn;
 #endif
 }
 
